@@ -1,5 +1,6 @@
 #![no_std]
 
+pub mod clock;
 mod cortex_m;
 pub mod mask;
 mod memory;

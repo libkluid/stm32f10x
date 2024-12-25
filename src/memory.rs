@@ -5,6 +5,21 @@ pub struct Word {
     pub value: u32,
 }
 
+impl Word {
+    pub fn bit_of(&self, offset: u32) -> bool {
+        assert!(offset < 8 * core::mem::size_of::<u32>() as u32);
+        (self.value & (1 << offset)) != 0
+    }
+
+    pub fn lower_half(&self) -> u16 {
+        (0x0000_FFFF & self.value) as u16
+    }
+
+    pub fn upper_half(&self) -> u16 {
+        ((0xFFFF_0000 & self.value) >> 16) as u16
+    }
+}
+
 impl From<u32> for Word {
     fn from(value: u32) -> Self {
         Self { value }
