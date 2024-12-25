@@ -33,10 +33,22 @@ unsafe fn initialize_rc_oscillator() {
 
     // init clocks
     rcc.cr.write_word(0x0000_0001);
-    rcc.cfgr.mask_word(mask::And(0xF0FF_0000));
+
+    // Wait until HSI is ready
+    while rcc.cr.read_word().bit_of(1) == false {
+        crate::cortex_m::asm::nop();
+    }
+
+    // MCO, Prescaler off
+    // HSI as system clock
+    rcc.cfgr.mask_word(mask::And(0xF8FF_0000));
+    // PLL off & CSS off & HSE off
     rcc.cr.mask_word(mask::And(0xFEF6_FFFF));
+    // HSEBYP off
     rcc.cr.mask_word(mask::And(0xFFFB_FFFF));
+    // PLL off
     rcc.cfgr.mask_word(mask::And(0xFF80_FFFF));
+    // Creat Flags and disable all clock interrupts
     rcc.cir.write_word(0x009F_0000);
 }
 
