@@ -1,8 +1,6 @@
 #![no_std]
 #![no_main]
 
-extern crate stm32f10x;
-
 #[no_mangle]
 #[link_section = ".vector_table.reset_vector"]
 pub static RESET_VECTOR: unsafe extern "C" fn() -> ! = _start;
@@ -15,12 +13,11 @@ unsafe extern "C" fn _start() -> ! {
 
 unsafe fn setup() -> ! {
     stm32f10x::clock::enable_lse();
+    stm32f10x::debug::enable_mco();
 
     let rcc = stm32f10x::peripherals::Rcc::get();
 
     // init led
-    rcc.apb2_rstr.mask_word(stm32f10x::mask::Or(0x0000_0004));
-    rcc.apb2_rstr.mask_word(stm32f10x::mask::And(!0x0000_0004));
     rcc.apb2_enr.mask_word(stm32f10x::mask::Or(0x0000_0004));
 
     let iop = stm32f10x::peripherals::Gpio::iopa();
@@ -29,10 +26,10 @@ unsafe fn setup() -> ! {
 
     loop {
         iop.odr.mask_word(stm32f10x::mask::Or(0x0000_0020));
-        stm32f10x::clock::delay_s(1);
+        stm32f10x::clock::delay_s(2);
 
         iop.odr.mask_word(stm32f10x::mask::And(!0x0000_0020));
-        stm32f10x::clock::delay_s(1);
+        stm32f10x::clock::delay_s(2);
     }
 }
 

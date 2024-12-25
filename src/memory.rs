@@ -11,6 +11,12 @@ impl Word {
         (self.value & (1 << offset)) != 0
     }
 
+    pub fn bit_range(&self, range: core::ops::Range<u32>) -> u32 {
+        assert!(range.end < 8 * core::mem::size_of::<u32>() as u32);
+        let mask = (1 << (range.end - range.start)) - 1;
+        (self.value >> range.start) & mask
+    }
+
     pub fn lower_half(&self) -> u16 {
         (0x0000_FFFF & self.value) as u16
     }
