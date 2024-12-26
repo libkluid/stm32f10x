@@ -134,7 +134,7 @@ pub unsafe fn reset() {
     copy_sections();
     initialize_rc_oscillator();
     // TODO: enable only if HSE is available
-    if false {
+    if true {
         advance_to_external_oscillator();
         enable_pll();
     }
