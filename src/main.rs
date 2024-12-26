@@ -33,7 +33,7 @@ unsafe fn setup() -> ! {
     }
 }
 
-#[panic_handler]
+#[cfg_attr(not(test), panic_handler)]
 fn panic(_: &core::panic::PanicInfo) -> ! {
     loop {}
 }
