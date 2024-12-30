@@ -54,15 +54,16 @@ unsafe fn setup() -> ! {
     init_usart2();
 
     let usart2 = stm32f10x::peripherals::Usart::usart2();
-
-    let mut count = 0;
-    loop {
-        write!(usart2, "Hello, world!: {:08X}\r\n", count).unwrap();
-        count += 1;
+    for i in 0..u32::MAX {
+        write!(usart2, "Hello, world! {}\r\n", i).unwrap();
         led_out(false);
         stm32f10x::clock::delay_s(1);
 
         led_out(true);
+        stm32f10x::clock::delay_s(1);
+    }
+
+    loop {
         stm32f10x::clock::delay_s(1);
     }
 }
